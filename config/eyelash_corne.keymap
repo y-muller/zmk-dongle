@@ -1,0 +1,310 @@
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/mouse.h>
+#include <dt-bindings/zmk/outputs.h>
+#include <dt-bindings/zmk/rgb.h>
+
+#include <input/processors.dtsi>
+
+#define ENCODERS y
+
+/*
+
+   &mmv_input_listener {
+       input-processors = <&zip_xy_scaler 2 1>;
+   };
+
+   &msc_input_listener {
+       input-processors = <&zip_xy_scaler 2 1>;
+   };
+
+ */
+
+#include "key-labels/eyelash_corne.h"
+#include "common.dtsi"
+#include "macros.dtsi"
+#include "macros_help.dtsi"
+#include "macros_private.dtsi"
+#include "macros_select.dtsi"
+#include "macros_tmux.dtsi"
+#include "combos.dtsi"
+#include "rgb.dtsi"
+#include "adaptive_keys.dtsi"
+#include "leader_keys.dtsi"
+#include "behaviors.dtsi"
+
+&led_strip {
+    chain-length = <1>;
+};
+
+/ {
+    // Corne-specific combos
+    combos {
+        compatible = "zmk,combos";
+        combo_media {
+            timeout-ms = <50>;
+            slow-release;
+            key-positions = <LT5 LT4>;
+            bindings = <&tog MEDIA>;
+            layers = <COLEMAK MEDIA>;
+        };
+        combo_undo {
+            timeout-ms = <50>;
+            key-positions = <LB4 LB3>;
+            bindings = <&kp LC(Z)>;
+            //layers = <COLEMAK>;
+        };
+    };
+};
+
+
+/ {
+
+    keymap {
+        compatible = "zmk,keymap";
+
+        default_layer {
+            display-name = "COLEMK";
+
+            // ┌──────┬─────┬─────┬─────┬─────┬─────┐                ┏━━━━━┓         ┌─────┬─────┬─────┬─────┬─────┬──────┐
+            // │ ESC  │  Q  │  W  │  F  │  P  │  B  │                ┃  ↑  ┃         │  J  │  L  │  U  │  Y  │  ;  │ BKSP │
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤          ┏━━━━━┃━━━━━┃━━━━━┓   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │MD/TAB│  A  │  R  │  S  │  T  │  G  │          ┃  ←  ┃enter┃  →  ┃   │  M  │  N  │  E  │  I  │  O  │MD/ENT│
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤ ┏━━━━┓   ┗━━━━━┃━━━━━┃━━━━━┛   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │CTL/SP│  Z  │  X  │  C  │  D  │  V  │ ┃MUTE┃         ┃  ↓  ┃         │  K  │  H  │ , ` │ . ~ │  /  │Alt/' │
+            // └──────┴─────┴─────┴───┬─┴───┬─┴───┬─┴─┺━┯━━┛         ┗━━━━━┛     ┌───┴─┬───┴─┬───┴─┬───┴─────┴─────┴──────┘
+            //                        │ NAV │ SFT │ EXT │                        │ SYM │ SPC │ Fn  │
+            //                        └─────┴─────┴─────┘                        └─────┴─────┴─────┘
+
+            bindings = <
+&kp ESC    &kp Q        &kp W        &kp F         &kp P         &kp B                           &kp UP                 &kp J        &kp L         &kp U        &kp Y        &kp SEMI    &kp BSPC
+MEDIA_TAB  &hrl LGUI A  &hrl LALT R  &hrl LSHFT S  &hrl LCTRL T  &hrl RALT G           &kp LEFT  &kp ENTER  &kp RIGHT   &hrr RALT M  &hrr LCTRL N  &hrr LSHFT E &hrr LALT I  &hrr LGUI O MEDIA_ENT
+LCTRL_LGUI &kp Z        &kp X        &kp C         &hrl RCTRL D  V_GREEK    &kp C_MUTE           &kp DOWN               K_GREEK      &hrr RCTRL H  &comm_grv    DOT_MACROS   SLASH_DIRS  &sqt_alt LALT SQT
+                                                  NAV_ADL  &kp LSHIFT  EXT_CAPS                                 SYMB_ALTGR  TMUX_SPC  FUNC_ADR
+            >;
+            sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
+        };
+
+        media_layer {
+            display-name = "MEDIA";
+
+            // ┌──────┬─────┬─────┬─────┬─────┬─────┐                ┏━━━━━┓         ┌─────┬─────┬─────┬─────┬─────┬──────┐
+            // │ ESC  │MUTE │VOL- │VOL+ │ MIC │ F5  │                ┃ s↑  ┃         │     │ mL  │ m↑  │ mR  │     │ PGUP │
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤          ┏━━━━━┃━━━━━┃━━━━━┓   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │      │     │BRI- │BRI+ │DISP │     │          ┃ s←  ┃enter┃ s→  ┃   │ZOOM+│ m←  │ m↓  │ m→  │  ↑  │ PGDN │
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤ ┏━━━━┓   ┗━━━━━┃━━━━━┃━━━━━┛   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │      │PLAY │STOP │PREV │NEXT │     │ ┃MUTE┃         ┃ s↓  ┃         │ZOOM-│ mM  │     │  ←  │  ↓  │  →   │
+            // └──────┴─────┴─────┴───┬─┴───┬─┴───┬─┴─┺━┯━━┛         ┗━━━━━┛     ┌───┴─┬───┴─┬───┴─┬───┴─────┴─────┴──────┘
+            //                        │     │     │     │                        │HOME │ SPC │ END │I
+            //                        └─────┴─────┴─────┘                        └─────┴─────┴─────┘
+
+            bindings = <
+&kp ESC    &kp C_MUTE   &kp C_VOL_DN &kp C_VOL_UP  &kp F20       &kp F5                        U_WH_U             LOCK_MED      &mkp LCLK    U_MS_U      &mkp RCLK    &none       &kp PG_UP
+EXT_TAB    &none        &kp C_BRI_DN &kp C_BRI_UP  &none         &none                 U_WH_L  &kp ENTER  U_WH_R  &kp LC(PLUS)  U_MS_L       U_MS_D      U_MS_R       &kp UP      &kp PG_DN
+&none      &kp C_PLAY   &kp C_STOP   &kp C_PREV    &kp C_NEXT    &none      &kp SPACE          U_WH_D             &kp LC(MINUS) &mkp MCLK    &none       &kp LEFT     &kp DOWN    &kp RIGHT
+                                                  NAV_ADL  &trans  &kp RALT                                     &kp HOME   &kp SPC  &kp END
+            >;
+            sensor-bindings = <&scroll_encoder>;
+        };
+
+        symbols_layer {
+            display-name = "SYMBOLS";
+
+            // ┌──────┬─────┬─────┬─────┬─────┬─────┐                ┏━━━━━┓         ┌─────┬─────┬─────┬─────┬─────┬──────┐
+            // │  x   │ > ' │  7  │  8  │  9  │ @ ^ │                ┃  ↑  ┃         │  &  │  (  │  )  │  {  │  }  │ BKSP │
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤          ┏━━━━━┃━━━━━┃━━━━━┓   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │ TAB  │  .  │  1  │  2  │  3  │  #  │          ┃  ←  ┃enter┃  →  ┃   │  =  │  -  │  +  │  /  │  *  │ ENT  │
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤ ┏━━━━┓   ┗━━━━━┃━━━━━┃━━━━━┛   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │ LOCK │ < " │  4  │  5  │  6  │ $ % │ ┃MUTE┃         ┃  ↓  ┃         │ ! \ │  _  │  [  │  ]  │ | ? │ Comp │
+            // └──────┴─────┴─────┴───┬─┴───┬─┴───┬─┴─┺━┯━━┛         ┗━━━━━┛     ┌───┴─┬───┴─┬───┴─┬───┴─────┴─────┴──────┘
+            //                        │     │Sft/0│     │                        │     │ SPC │     │
+            //                        └─────┴─────┴─────┘                        └─────┴─────┴─────┘
+
+            bindings = <
+&kp X      &ht_gt 0 0    &kp N7       &kp N8        &kp N9        &at_caret                        &kp UP                 &ht_amps 0 0 &ht_lpar 0 LPAR &ht_rpar 0 RPAR  &ht_lbrc 0 0 &kp RBRC    &kp BSPC
+&kp TAB    &hrl_dot LGUI 0 &hrl LALT N1 &hrl LSHFT N2 &hrl LCTRL N3 &ht_hash 0 HASH      &kp LEFT  &kp ENTER  &kp RIGHT   &ht_equl 0 0 &hrr LCTRL MINUS &hrr LSHFT PLUS &hrr_slsh LALT 0 &hrr_star LGUI 0 &kp ENTER
+LOCK_SYM   &ht_lt 0 0    &kp N4       &kp N5        &kp N6        &dlr_prc    &kp SPACE            &kp DOWN               &ht_excl 0 0 &kp UNDER     &ht_lbkt 0 LBKT    &kp RBKT     &ht_pipe 0 0 COMPOSE
+                                                  NAV_ADL  &mt LSHIFT N0 &trans                                        &trans  &kp SPC  &trans
+            >;
+            sensor-bindings = <&inc_dec_kp TAB LS(TAB)>;
+        };
+
+        symbols_layer {
+            display-name = "HEX";
+
+            // ┌──────┬─────┬─────┬─────┬─────┬─────┐                ┏━━━━━┓         ┌─────┬─────┬─────┬─────┬─────┬──────┐
+            // │  0x  │  C  │     │     │     │  D  │                ┃     ┃         │     │     │     │     │     │      │
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤          ┏━━━━━┃━━━━━┃━━━━━┓   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │      │  B  │     │     │     │  E  │          ┃     ┃     ┃     ┃   │     │     │     │     │     │      │
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤ ┏━━━━┓   ┗━━━━━┃━━━━━┃━━━━━┛   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │  #   │  A  │     │     │     │  F  │ ┃    ┃         ┃     ┃         │     │     │     │     │     │      │
+            // └──────┴─────┴─────┴───┬─┴───┬─┴───┬─┴─┺━┯━━┛         ┗━━━━━┛     ┌───┴─┬───┴─┬───┴─┬───┴─────┴─────┴──────┘
+            //                        │     │     │     │                        │     │     │     │
+            //                        └─────┴─────┴─────┘                        └─────┴─────┴─────┘
+
+            bindings = <
+&kp X      &ht_gt 0 0    &kp N7       &kp N8        &kp N9        &at_caret                        &kp UP                 &ht_amps 0 0 &ht_lpar 0 LPAR &ht_rpar 0 RPAR  &ht_lbrc 0 0 &kp RBRC    &kp BSPC
+&kp TAB    &hrl_dot LGUI 0 &hrl LALT N1 &hrl LSHFT N2 &hrl LCTRL N3 &ht_hash 0 HASH      &kp LEFT  &kp ENTER  &kp RIGHT   &ht_equl 0 0 &hrr LCTRL MINUS &hrr LSHFT PLUS &hrr_slsh LALT 0 &hrr_star LGUI 0 &kp ENTER
+LOCK_SYM   &ht_lt 0 0    &kp N4       &kp N5        &kp N6        &dlr_prc    &kp SPACE            &kp DOWN               &ht_excl 0 0 &kp UNDER     &ht_lbkt 0 LBKT    &kp RBKT     &ht_pipe 0 0 COMPOSE
+                                                  NAV_ADL  &mt LSHIFT N0 &trans                                        &trans  &kp SPC  &trans
+            >;
+            sensor-bindings = <&inc_dec_kp TAB LS(TAB)>;
+        };
+
+        extend_layer {
+            display-name = "EXTEND";
+
+            // ┌──────┬─────┬─────┬─────┬─────┬─────┐                ┏━━━━━┓         ┌─────┬─────┬─────┬─────┬─────┬──────┐
+            // │      │ ESC │ C-W │ C-F │     │ INS │                ┃  ↑  ┃         │HOME │PGUP │  ↑  │PGDN │GNOME│ DEL  │
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤          ┏━━━━━┃━━━━━┃━━━━━┓   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │PREV W│SUPER│ ALT │ SFT │CTRL │SLCT │          ┃  ←  ┃enter┃  →  ┃   │ END │  ←  │  ↓  │  →  │BSPC │ ENT  │
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤ ┏━━━━┓   ┗━━━━━┃━━━━━┃━━━━━┛   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │ LOCK │UNDO │ CUT │COPY │PASTE│REDO │ ┃MUTE┃         ┃  ↓  ┃         │S-TAB│ TAB │     │BWORD│ DEL │PRTSC │
+            // └──────┴─────┴─────┴───┬─┴───┬─┴───┬─┴─┺━┯━━┛         ┗━━━━━┛     ┌───┴─┬───┴─┬───┴─┬───┴─────┴─────┴──────┘
+            //                        │     │     │     │                        │     │ SPC │     │
+            //                        └─────┴─────┴─────┘                        └─────┴─────┴─────┘
+
+            bindings = <
+&none       &kp ESC      &kp LC(W)    &kp LC(F)     &none         &kp INS                         &kp UP                 &kp HOME     &kp PGUP      &kp UP       &kp PGDN   GNOME       &kp DEL
+&prv_wnd    &sk LGUI     &sk LALT     &sk LSHFT     &sk LCTRL     SELECT                &kp LEFT  &kp ENTER  &kp RIGHT   &kp END      &kp LEFT      &kp DOWN     &kp RIGHT  &kp BSPC    &kp ENTER
+LOCK_EXT    &kp LC(Z)    &kp LC(X)    &kp LC(C)     &kp LC(V)     &kp LC(Y)  &kp LS(SPACE)        &kp DOWN               &kp LS(TAB)  &kp TAB       &none        &kp LC(BSPC) &kp DEL   &kp PSCRN
+                                                  &trans   &trans  &trans                                     &trans   &kp SPC  &trans
+            >;
+            sensor-bindings = <&inc_dec_kp LS(LG(LBKT)) LS(LG(RBKT))>;  // External volume on Hifiberry
+        };
+
+        nav_layer {
+            display-name = "NAV";
+
+            // ┌──────┬─────┬─────┬─────┬─────┬─────┐                ┏━━━━━┓         ┌─────┬─────┬─────┬─────┬─────┬──────┐
+            // │A-ESC │Trsm │Ffox │Files│CodeL│Jopln│                ┃  ↑  ┃         │     │Alt-1│Alt-2│Alt-3│Alt-4│      │
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤          ┏━━━━━┃━━━━━┃━━━━━┓   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │A-TAB │Signl│Skype│Slack│Build│STerm│          ┃  ←  ┃enter┃  →  ┃   │C-pUP│Wksp1│Wksp2│Wkrp3│Wksp4│Menu  │
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤ ┏━━━━┓   ┗━━━━━┃━━━━━┃━━━━━┛   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │      │ScrpB│     │TCopy│TPast│NTerm│ ┃MUTE┃         ┃  ↓  ┃         │C-pDN│T Lft│T Rgt│Srch+│Srch-│      │
+            // └──────┴─────┴─────┴───┬─┴───┬─┴───┬─┴─┺━┯━━┛         ┗━━━━━┛     ┌───┴─┬───┴─┬───┴─┬───┴─────┴─────┴──────┘
+            //                        │     │     │     │                        │Alt ←│     │Alt →│
+            //                        └─────┴─────┴─────┘                        └─────┴─────┴─────┘
+
+            bindings = <
+&altesc     APP_TRSM     APP_FFOX     APP_FILE      APP_CODE      APP_JOPL                        &kp UP                 &none        &kp LA(N1)    &kp LA(N2)   &kp LA(N3) &kp LA(N4)  &none
+&alttab     APP_SIGN     &none        APP_SLAC      APP_BTRM      APP_STRM              &kp LEFT  &kp ENTER  &kp RIGHT   &kp LC(PGUP) &kp LG(F1)    &kp LG(F2)   &kp LG(F3) &kp LG(F4)  &kp K_APP
+&altgrv     APP_SCRP     &none        &kp LC(LS(C)) &kp LC(LS(V)) APP_NTRM   &kp C_MUTE           &kp DOWN               &kp LC(PGDN) TAB_L         TAB_R        &srch_nxt  &srch_prv   &none 
+                                                  &trans   &trans  &trans                                     &kp LA(LEFT) &kp SPC &kp LA(RIGHT)
+            >;
+            sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
+        };
+
+        func_layer {
+            display-name = "FUNC";
+
+            // ┌──────┬─────┬─────┬─────┬─────┬─────┐                ┏━━━━━┓         ┌─────┬─────┬─────┬─────┬─────┬──────┐
+            // │RESET │     │ F7  │ F8  │ F9  │ F12 │                ┃Bri+ ┃         │BTrst│ BT1 │ BT2 │ BT3 │ BT4 │RESET │
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤          ┏━━━━━┃━━━━━┃━━━━━┓   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │ BOOT │     │ F1  │ F2  │ F3  │ F11 │          ┃     ┃enter┃     ┃   │ RGB │Bri+-│Sat+-│Hue+-│Effct│ BOOT │
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤ ┏━━━━┓   ┗━━━━━┃━━━━━┃━━━━━┛   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │      │     │ F4  │ F5  │ F6  │ F10 │ ┃MUTE┃         ┃Bri- ┃         │SLEEP│     │     │     │     │      │
+            // └──────┴─────┴─────┴───┬─┴───┬─┴───┬─┴─┺━┯━━┛         ┗━━━━━┛     ┌───┴─┬───┴─┬───┴─┬───┴─────┴─────┴──────┘
+            //                        │     │     │     │                        │     │     │     │
+            //                        └─────┴─────┴─────┘                        └─────┴─────┴─────┘
+
+            bindings = <
+&none       &none        &kp F7       &kp F8        &kp F9        &kp F12                       &rgb_ug RGB_BRI        &td_btclr       &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &none
+&td_boot    &none        &kp F1       &kp F2        &kp F3        &kp F11                 &none &kp ENTER   &none      &rgb_ug RGB_TOG &rgb_bright  &rgb_sat     &rgb_hue     &rgb_effect  &td_boot
+&none       &none        &kp F4       &kp F5        &kp F6        &kp F10  &kp LSFT             &rgb_ug RGB_BRD        &kp C_SLEEP     &none        &none        &none        &none        &none
+                                                  &trans   &trans  &trans                                     &trans   &trans  &trans
+            >;
+            sensor-bindings = <&inc_dec_kp C_BRI_UP C_BRI_DN>;
+        };
+
+        tmux_layer {
+            display-name = "TMUX";
+
+            // ┌──────┬─────┬─────┬─────┬─────┬─────┐                ┏━━━━━┓         ┌─────┬─────┬─────┬─────┬─────┬──────┐
+            // │      │     │Lst W│     │     │Rload│                ┃  ↑  ┃         │     │Mv L │ Up  │Mv R │SpltV│      │
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤          ┏━━━━━┃━━━━━┃━━━━━┓   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │      │SUPER│ ALT │ SFT │CTRL │     │          ┃  ←  ┃     ┃  →  ┃   │     │ Prv │ Dwn │ Nxt │     │      │
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤ ┏━━━━┓   ┗━━━━━┃━━━━━┃━━━━━┛   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │ Zoom │P Exp│     │Crt W│     │     │ ┃    ┃         ┃  ↓  ┃         │ Cmd │CopyM│     │     │SpltH│      │
+            // └──────┴─────┴─────┴───┬─┴───┬─┴───┬─┴─┺━┯━━┛         ┗━━━━━┛     ┌───┴─┬───┴─┬───┴─┬───┴─────┴─────┴──────┘
+            //                        │     │     │     │                        │     │     │     │
+            //                        └─────┴─────┴─────┘                        └─────┴─────┴─────┘
+
+            bindings = <
+&none       &none        &tm_lsw      &none         &none         &tm_rcnf                      &tm_cup                 &tm_j    &tm_MvL  &tm_u     &tm_MvR   &tm_spV   &none
+&none       &kp LGUI     &kp LALT     &kp LSHFT     &kp LCTRL     &none               &tm_clft  &none       &tm_crght   &tm_m    &tm_n    &tm_e     &tm_i     &none     &none
+&trans      &tm_z        &none        &tm_cw        &none         &none  &none                  &tm_cdn                 &tm_cmd  &tm_cm   &none     &none     &tm_spH   &none
+                                                  &none    &trans    &none                                           &none   &none  &none
+            >;
+            sensor-bindings = <&rgb_encoder>;
+        };
+
+        select1_layer {
+            display-name = "SLCT1";
+
+            // ┌──────┬─────┬─────┬─────┬─────┬─────┐                ┏━━━━━┓         ┌─────┬─────┬─────┬─────┬─────┬──────┐
+            // │      │     │     │     │     │     │                ┃  ↑  ┃         │     │     │     │     │     │      │
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤          ┏━━━━━┃━━━━━┃━━━━━┓   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │      │     │     │     │     │     │          ┃  ←  ┃     ┃  →  ┃   │     │     │     │     │     │      │
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤ ┏━━━━┓   ┗━━━━━┃━━━━━┃━━━━━┛   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │      │     │     │     │     │     │ ┃    ┃         ┃  ↓  ┃         │     │     │     │     │     │      │
+            // └──────┴─────┴─────┴───┬─┴───┬─┴───┬─┴─┺━┯━━┛         ┗━━━━━┛     ┌───┴─┬───┴─┬───┴─┬───┴─────┴─────┴──────┘
+            //                        │     │     │     │                        │     │     │     │
+            //                        └─────┴─────┴─────┘                        └─────┴─────┴─────┘
+
+            bindings = <
+&none       &none        &none        &none         &none         &none                         &none                   &none    &none    SEL1_U    &none     &none     &none
+&none       &none        &none        &none         &none         &none               &none     &none       &none       &none    SEL1_L   SEL1_D    SEL1_R    &none     &none
+&none       &none        &none        &none         &none         &none  &none                  &none                   &none    &none    &none     &none     &none     &none
+                                                  &none   &none  &none                                           &none   &none  &none
+            >;
+            sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
+        };
+
+        select2_layer {
+            display-name = "SLCT2";
+
+            // ┌──────┬─────┬─────┬─────┬─────┬─────┐                ┏━━━━━┓         ┌─────┬─────┬─────┬─────┬─────┬──────┐
+            // │      │     │     │     │     │     │                ┃  ↑  ┃         │     │     │     │     │     │      │
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤          ┏━━━━━┃━━━━━┃━━━━━┓   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │      │     │     │     │     │     │          ┃  ←  ┃     ┃  →  ┃   │     │     │     │     │     │      │
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤ ┏━━━━┓   ┗━━━━━┃━━━━━┃━━━━━┛   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │      │     │     │     │     │     │ ┃    ┃         ┃  ↓  ┃         │     │     │     │     │     │      │
+            // └──────┴─────┴─────┴───┬─┴───┬─┴───┬─┴─┺━┯━━┛         ┗━━━━━┛     ┌───┴─┬───┴─┬───┴─┬───┴─────┴─────┴──────┘
+            //                        │     │     │     │                        │     │     │     │
+            //                        └─────┴─────┴─────┘                        └─────┴─────┴─────┘
+
+            bindings = <
+&kp ESC     &none        &none        &none         &none         &none                         &none                   &none    &none    &sel2_u   &none     &none     &none
+&kp TAB     &none        &none        &none         &none         &none               &none     &none       &none       &none    &sel2_l  &sel2_d   &sel2_r   &none     &none
+&kp GRAVE   &none        &none        &none         &none         &none  &none                  &none                   &none    &none    &none     &none     &none     &none
+                                                  &none   &none  &none                                           &none   &none  &none
+            >;
+            sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
+        };
+/*
+        none_layer {
+            display-name = "NONE";
+
+            // ┌──────┬─────┬─────┬─────┬─────┬─────┐                ┏━━━━━┓         ┌─────┬─────┬─────┬─────┬─────┬──────┐
+            // │      │     │     │     │     │     │                ┃  ↑  ┃         │     │     │     │     │     │      │
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤          ┏━━━━━┃━━━━━┃━━━━━┓   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │      │     │     │     │     │     │          ┃  ←  ┃     ┃  →  ┃   │     │     │     │     │     │      │
+            // ├──────┼─────┼─────┼─────┼─────┼─────┤ ┏━━━━┓   ┗━━━━━┃━━━━━┃━━━━━┛   ├─────┼─────┼─────┼─────┼─────┼──────┤
+            // │      │     │     │     │     │     │ ┃    ┃         ┃  ↓  ┃         │     │     │     │     │     │      │
+            // └──────┴─────┴─────┴───┬─┴───┬─┴───┬─┴─┺━┯━━┛         ┗━━━━━┛     ┌───┴─┬───┴─┬───┴─┬───┴─────┴─────┴──────┘
+            //                        │     │     │     │                        │     │     │     │
+            //                        └─────┴─────┴─────┘                        └─────┴─────┴─────┘
+
+            bindings = <
+&none       &none        &none        &none         &none         &none                         &none                   &none    &none    &none     &none     &none     &none
+&none       &none        &none        &none         &none         &none               &none     &none       &none       &none    &none    &none     &none     &none     &none
+&none       &none        &none        &none         &none         &none  &none                  &none                   &none    &none    &none     &none     &none     &none
+                                                  &none   &none  &none                                           &none   &none  &none
+            >;
+            sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOLUME_DOWN>;
+        };
+*/
+    };
+};

@@ -1,0 +1,181 @@
+/ {
+    combos {
+        compatible = "zmk,combos";
+        combo_leader {
+            timeout-ms = <50>;
+            key-positions = <RB1 RB2>;
+            bindings = <&leader>;
+            layers = <COLEMAK>;
+        };
+        combo_adaptive_dev {
+            timeout-ms = <50>;
+            key-positions = <RM0 RB0>;
+            bindings = <&ad_dev>;
+            layers = <COLEMAK>;
+        };
+        combo_qu {
+            timeout-ms = <50>;
+            key-positions = <LM4 LB4>;
+            bindings = <&macro_qu>;
+            layers = <COLEMAK>;
+        };
+        combo_under {
+            timeout-ms = <50>;
+            key-positions = <RM1 RB1>;
+            bindings = <&kp UNDER>;
+            layers = <COLEMAK>;
+        };
+        combo_minus {
+            timeout-ms = <50>;
+            key-positions = <RT1 RM1>;
+            bindings = <&minus_nobreak>;
+            layers = <COLEMAK>;
+        };
+        combo_sqt {
+            timeout-ms = <50>;
+            key-positions = <RT2 RM2>;
+            bindings = <&ht_sqts 0 0>;
+            layers = <COLEMAK>;
+        };
+        combo_dqt {
+            timeout-ms = <50>;
+            key-positions = <RT3 RM3>;
+            bindings = <&ht_dqts 0 DQT>;
+            layers = <COLEMAK>;
+        };
+        combo_colon {
+            timeout-ms = <50>;
+            key-positions = <LM1 LB1>;
+            bindings = <&colon_nobreak>;
+            layers = <COLEMAK SYMBOLS>;
+        };
+        combo_semi {
+            timeout-ms = <50>;
+            key-positions = <LM2 LB2>;
+            bindings = <&semi_nobreak>;
+            layers = <COLEMAK SYMBOLS>;
+        };
+        combo_excl {
+            timeout-ms = <50>;
+            key-positions = <RM4 RB4>;
+            bindings = <&kp EXCL>;
+            layers = <COLEMAK>;
+        };
+        combo_backslash {
+            timeout-ms = <50>;
+            key-positions = <RM3 RB3>;
+            bindings = <&kp BACKSLASH>;
+            layers = <COLEMAK SYMBOLS>;
+        };
+        combo_less_greater {
+            timeout-ms = <50>;
+            key-positions = <LT4 LT3>;
+            bindings = <&lt_gt_ins>;
+            layers = <SYMBOLS>;
+        };
+        combo_backword {
+            timeout-ms = <50>;
+            key-positions = <RT1 RT2>;
+            bindings = <&kp LC(BSPC)>;
+            layers = <COLEMAK SYMBOLS>;
+        };
+        combo_backspace {
+            timeout-ms = <50>;
+            key-positions = <RT2 RT3>;
+            bindings = <&kp BSPC>;
+            layers = <COLEMAK SYMBOLS>;
+        };
+        combo_save {
+            timeout-ms = <50>;
+            key-positions = <LT3 LT2>;
+            bindings = <&kp LC(S)>;
+            layers = <COLEMAK>;
+        };
+        combo_copy {
+            timeout-ms = <50>;
+            key-positions = <LB3 LB2>;
+            bindings = <&kp LC(C)>;
+            //layers = <COLEMAK>;
+        };
+        combo_paste {
+            timeout-ms = <50>;
+            key-positions = <LB2 LB1>;
+            bindings = <&kp LC(V)>;
+            //layers = <COLEMAK>;
+        };
+        combo_cut {
+            timeout-ms = <50>;
+            key-positions = <LB3 LB1>;
+            bindings = <&kp LC(X)>;
+            //layers = <COLEMAK>;
+        };
+        combo_redo {
+            timeout-ms = <50>;
+            key-positions = <LB1 LB0>;
+            bindings = <&kp LC(Y)>;
+            //layers = <COLEMAK>;
+        };
+        combo_escape {
+            timeout-ms = <50>;
+            key-positions = <LT2 LM2>;
+            bindings = <&kp ESC>;
+            layers = <COLEMAK SYMBOLS MEDIA>;
+        };
+        combo_vimcmd {
+            timeout-ms = <50>;
+            key-positions = <LT1 LM1>;
+            bindings = <&vimcmd>;
+            layers = <COLEMAK>;
+        };
+        combo_soft_off {
+            timeout-ms = <50>;
+            key-positions = <LT4 LT3 LM2>;
+            bindings = <&soft_off>;
+            layers = <FUNC>;
+        };
+        // Help combos
+        combo_help_main_altgr {
+            timeout-ms = <50>;
+            slow-release;
+            key-positions = <LB1 RB1>;
+            bindings = <&help_main_altgr>;
+            layers = <COLEMAK>;
+        };
+        combo_help_extend {
+            timeout-ms = <50>;
+            slow-release;
+            key-positions = <LB1 RB1>;
+            bindings = <&help_extend>;
+            layers = <EXTEND>;
+        };
+        combo_help_nav {
+            timeout-ms = <50>;
+            slow-release;
+            key-positions = <LB1 RB1>;
+            bindings = <&help_nav>;
+            layers = <NAV>;
+        };
+        combo_help_symbols {
+            timeout-ms = <50>;
+            slow-release;
+            key-positions = <LB1 RB1>;
+            bindings = <&help_symbols>;
+            layers = <SYMBOLS>;
+        };
+        combo_help_func {
+            timeout-ms = <50>;
+            slow-release;
+            key-positions = <LB1 RB1>;
+            bindings = <&help_func>;
+            layers = <FUNC>;
+        };
+        combo_help_media {
+            timeout-ms = <50>;
+            slow-release;
+            key-positions = <LB1 RB1>;
+            bindings = <&help_media>;
+            layers = <MEDIA>;
+        };
+    };
+};
+
