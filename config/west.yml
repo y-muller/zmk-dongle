@@ -1,0 +1,51 @@
+manifest:
+  remotes:
+    - name: zmkfirmware
+      url-base: https://github.com/zmkfirmware
+    # Additional modules containing boards/shields/custom code can be listed here as well
+    # See https://docs.zephyrproject.org/3.2.0/develop/west/manifest.html#projects
+    - name: petejohanson
+      url-base: https://github.com/petejohanson
+    - name: eyelash
+      url-base: https://github.com/a741725193
+    - name: tokyo2006
+      url-base: https://github.com/tokyo2006
+    - name: englmaxi
+      url-base: https://github.com/englmaxi
+    - name: gpeye
+      url-base: https://github.com/GPeye
+    - name: urob
+      url-base: https://github.com/urob
+    - name: ssbb
+      url-base: https://github.com/ssbb
+  projects:
+    - name: zmk
+      remote: zmkfirmware
+      revision: v0.3
+      import: app/west.yml
+    - name: zmk-new_corne
+      remote: eyelash
+      revision: main
+    - name: zmk-corne-dongle
+      remote: eyelash
+      revision: main
+    - name: prospector-zmk-module
+      remote: tokyo2006
+      revision: change_spi2
+    - name: zmk-dongle-display
+      remote: englmaxi
+      revision: v0.3
+    - name: hammerbeam-slideshow
+      remote: gpeye
+      revision: main 
+    - name: zmk-leader-key
+      remote: urob
+      revision: v0.3 # set to same as ZMK version above
+    - name: zmk-adaptive-key
+      remote: urob
+      revision: v0.3 # set to same as ZMK version above
+#    - name: zmk-antecedent-morph
+#      remote: ssbb
+#      revision: v1
+self:
+    path: config
