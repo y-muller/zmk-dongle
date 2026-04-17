@@ -21,11 +21,11 @@ include:
   - board: nice_nano_v2
     shield: eyeslash_corne_central_dongle dongle_display
     artifact-name: eyeslash_corne_central_dongle_oled
-  - board: nice_nano_v2
-    shield: eyeslash_corne_peripheral_left nice_view_custom
-    shield: eyeslash_corne_peripheral_left
-  - board: nice_nano_v2
-    shield: eyeslash_corne_peripheral_right nice_view_custom
-  - board: nice_nano_v2
-    shield: settings_reset
+  #- board: nice_nano_v2
+  #  shield: eyeslash_corne_peripheral_left nice_view_custom
+  #  shield: eyeslash_corne_peripheral_left
+  #- board: nice_nano_v2
+  #  shield: eyeslash_corne_peripheral_right nice_view_custom
+  #- board: nice_nano_v2
+  #  shield: settings_reset
 

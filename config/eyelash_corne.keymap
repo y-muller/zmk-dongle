@@ -130,7 +130,7 @@ LOCK_SYM   &ht_lt 0 0    &kp N4       &kp N5        &kp N6        &dlr_prc    &k
             sensor-bindings = <&inc_dec_kp TAB LS(TAB)>;
         };
 
-        symbols_layer {
+        hex_layer {
             display-name = "HEX";
 
             // ┌──────┬─────┬─────┬─────┬─────┬─────┐                ┏━━━━━┓         ┌─────┬─────┬─────┬─────┬─────┬──────┐
